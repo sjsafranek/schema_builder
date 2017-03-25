@@ -1,4 +1,4 @@
-package main
+package schema_builder
 
 import (
 	crand "crypto/rand"

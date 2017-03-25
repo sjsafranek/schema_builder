@@ -1,4 +1,4 @@
-package main
+package schema_builder
 
 const (
 	DEFAULT_SELECTOR_UNIQUE_VALUE_THRESHOLD int = 200
