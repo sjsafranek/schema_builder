@@ -36,24 +36,25 @@ type JobOptions struct {
 }
 
 type Worker struct {
-	Queue          chan string
-	job_id         string
-	id             string
-	column_id      string
-	workwg         *sync.WaitGroup
-	startTime      time.Time
-	Column ColumnMetadata
+	Queue     chan string
+	job_id    string
+	id        string
+	column_id string
+	workwg    *sync.WaitGroup
+	startTime time.Time
+	//Column ColumnMetadata
+	Column ColumnSchema
 }
 
-type ColumnMetadata struct {
-	isString      bool
-	isInt         bool
-	isFloat       bool
-	minValue      int
-	maxValue      int
-	count         int
-	length        int
-	precision     int
-	unique_values map[string]int
-	column_id string
-}
+// type ColumnMetadata struct {
+// 	isString      bool
+// 	isInt         bool
+// 	isFloat       bool
+// 	minValue      int
+// 	maxValue      int
+// 	count         int
+// 	length        int
+// 	precision     int
+// 	unique_values map[string]int
+// 	column_id string
+// }

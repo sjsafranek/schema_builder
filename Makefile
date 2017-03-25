@@ -19,6 +19,7 @@ build: fmt test
 
 fmt:
 	@GOPATH=${GPATH} gofmt -s -w *.go
+	@GOPATH=${GPATH} gofmt -s -w schema_builder
 
 test: fmt
 	@GOPATH=${GPATH} go test -v -bench=. -test.benchmem
