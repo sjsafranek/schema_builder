@@ -16,9 +16,7 @@ func init() {
 	rand.Seed(time.Now().UnixNano())
 }
 
-// checks of string is an integer
-// @param text {string}
-// @return bool
+// strIsInt checks if string can be parsed as an integer
 func strIsInt(text string) bool {
 	// Attempt to parse string as int
 	if _, err := strconv.Atoi(text); err == nil {
@@ -27,9 +25,7 @@ func strIsInt(text string) bool {
 	return false
 }
 
-// strIsFloat checks if string is a float
-// @param text {string}
-// @returns bool
+// strIsFloat checks if string cam be parsed as a float
 func strIsFloat(text string) bool {
 	// Attempt to parse string as float64
 	if _, err := strconv.ParseFloat(text, 64); err == nil {
@@ -39,10 +35,7 @@ func strIsFloat(text string) bool {
 	return false
 }
 
-// stringInSlice loops through a []string and returns a bool if string is found
-// @param a {string} string to find
-// @param list {[]string} array of strings to search
-// @return bool
+// StringInSlice checks if a string is in a slice.
 func StringInSlice(a string, list []string) bool {
 	for _, b := range list {
 		if b == a {
@@ -52,10 +45,7 @@ func StringInSlice(a string, list []string) bool {
 	return false
 }
 
-// intInSlice loops through a []string and returns a bool if int is found
-// @param a {int} string to find
-// @param list {[]int} array of int to search
-// @return bool
+// intInSlice checks if int is in a slice.
 func intInSlice(a int, list []int) bool {
 	for _, b := range list {
 		if b == a {
@@ -65,9 +55,7 @@ func intInSlice(a int, list []int) bool {
 	return false
 }
 
-// NewUUID2 generates and returns a uuid
-// @returns string
-// @returns error
+// NewUUID generates and returns a uuid
 func NewUUID() (string, error) {
 	b := make([]byte, 16)
 	n, err := io.ReadFull(crand.Reader, b)
@@ -82,8 +70,6 @@ func NewUUID() (string, error) {
 }
 
 // newJobId generates and returns an job_id of desired length
-// @param int length of job_id
-// @returns string
 func newJobId(n int) string {
 	s := ""
 	for i := 1; i <= n; i++ {

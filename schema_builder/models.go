@@ -5,12 +5,14 @@ import (
 	"time"
 )
 
+// ColumnSchema struct to store column information.
 type ColumnSchema struct {
 	Type       string           `json:"type"`
 	ColumnId   string           `json:"column_id"`
 	Attributes AttributesSchema `json:"attributes"`
 }
 
+// AttributesSchema struct to store column metadata for classification.
 type AttributesSchema struct {
 	Length    int      `json:"length,omitempty"`
 	MinValue  int      `json:"min_value,omitempty"`
@@ -19,6 +21,7 @@ type AttributesSchema struct {
 	Values    []string `json:"values,omitempty"`
 }
 
+// Job struct for storing results and metadata.
 type Job struct {
 	Id       string         `json:"id"`
 	FileName string         `json:"filename"`
@@ -28,13 +31,7 @@ type Job struct {
 	Cols     int            `json:"cols"`
 }
 
-type JobOptions struct {
-	SelectorUniqueValueThreshold int
-	VarcharPadding               int
-	NumericPadding               int
-	PrecisionPadding             int
-}
-
+// Worker struct for classifying data types from a string channel.
 type Worker struct {
 	Queue     chan string
 	job_id    string
@@ -42,19 +39,5 @@ type Worker struct {
 	column_id string
 	workwg    *sync.WaitGroup
 	startTime time.Time
-	//Column ColumnMetadata
-	Column ColumnSchema
+	Column    ColumnSchema
 }
-
-// type ColumnMetadata struct {
-// 	isString      bool
-// 	isInt         bool
-// 	isFloat       bool
-// 	minValue      int
-// 	maxValue      int
-// 	count         int
-// 	length        int
-// 	precision     int
-// 	unique_values map[string]int
-// 	column_id string
-// }

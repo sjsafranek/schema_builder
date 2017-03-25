@@ -8,19 +8,33 @@ const (
 )
 
 var (
+	// SelectorUniqueValueThreshold determines if a string column
+	// is to be classified as a varchar or selector data type.
 	SelectorUniqueValueThreshold int = DEFAULT_SELECTOR_UNIQUE_VALUE_THRESHOLD
-	VarcharPadding               int = DEFAULt_VARCHAR_PADDING
-	NumericPadding               int = DEFAULT_NUMERIC_PADDING
-	PrecisionPadding             int = DEFAULT_PRECISION_PADDING
-	ReservedColumns              []string
-	Verbose                      bool = false
+
+	// VarcharPadding sets padding for max varchar length.
+	VarcharPadding int = DEFAULt_VARCHAR_PADDING
+
+	// NumericPadding sets padding for min and max values
+	// in numeric columns.
+	NumericPadding int = DEFAULT_NUMERIC_PADDING
+
+	// PrecisionPadding sets padding for decimal precision
+	// of fixed_point data types.
+	PrecisionPadding int = DEFAULT_PRECISION_PADDING
+
+	// ReservedColumns sets columns not to be classified.
+	ReservedColumns []string
+
+	// Verbose set verbose output during classification.
+	Verbose bool = false
+
+	// Jobs contains all active jobs.
+	Jobs map[string]*Job
 )
 
 func init() {
+	Jobs = make(map[string]*Job)
 	ReservedColumns = append(ReservedColumns, "event_timestamp")
 	ReservedColumns = append(ReservedColumns, "event_duration")
-}
-
-func init() {
-	Jobs = make(map[string]*Job)
 }

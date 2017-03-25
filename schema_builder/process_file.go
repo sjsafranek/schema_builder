@@ -13,7 +13,6 @@ import (
 )
 
 var (
-	Jobs  map[string]*Job
 	guard sync.RWMutex
 	//MAX_LINES int = 10000
 )
