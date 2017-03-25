@@ -1,4 +1,4 @@
-package schema_builder
+package main
 
 import (
 	"flag"
@@ -7,21 +7,22 @@ import (
 	"os"
 )
 
+import "./schema_builder"
+
 var (
 	csv_file string
-	verbose  bool = false
 )
 
 func main() {
-	Jobs = make(map[string]*Job)
+	// Jobs = make(map[string]*Job)
 
 	flag.StringVar(&csv_file, "f", "", "csv file")
-	flag.BoolVar(&verbose, "v", false, "verbose")
+	flag.BoolVar(&schema_builder.Verbose, "v", false, "verbose")
 	//flag.IntVar(&MAX_LINES, "m", MAX_LINES, "max lines to process")
-	flag.IntVar(&SelectorUniqueValueThreshold, "s", DEFAULT_SELECTOR_UNIQUE_VALUE_THRESHOLD, "Selector unique value threshold")
-	flag.IntVar(&VarcharPadding, "vp", DEFAULt_VARCHAR_PADDING, "Varchar padding")
-	flag.IntVar(&NumericPadding, "np", DEFAULT_NUMERIC_PADDING, "Numeric padding")
-	flag.IntVar(&PrecisionPadding, "pp", DEFAULT_PRECISION_PADDING, "Precision padding")
+	flag.IntVar(&schema_builder.SelectorUniqueValueThreshold, "s", schema_builder.DEFAULT_SELECTOR_UNIQUE_VALUE_THRESHOLD, "Selector unique value threshold")
+	flag.IntVar(&schema_builder.VarcharPadding, "vp", schema_builder.DEFAULt_VARCHAR_PADDING, "Varchar padding")
+	flag.IntVar(&schema_builder.NumericPadding, "np", schema_builder.DEFAULT_NUMERIC_PADDING, "Numeric padding")
+	flag.IntVar(&schema_builder.PrecisionPadding, "pp", schema_builder.DEFAULT_PRECISION_PADDING, "Precision padding")
 
 	flag.Parse()
 
@@ -30,7 +31,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	results, err := ProcessCsvFile(csv_file)
+	results, err := schema_builder.ProcessCsvFile(csv_file)
 	if nil != err {
 		log.Fatal(err)
 	}

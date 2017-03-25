@@ -6,55 +6,23 @@ import (
 	"sort"
 	"strconv"
 	"strings"
-	// "sync"
 	"time"
 )
 
-// var (
-// 	SelectorUniqueValueThreshold int = 200
-// 	VarcharPadding               int = 1
-// 	NumericPadding               int = 1
-// 	PrecisionPadding             int = 0
-// 	EtsReservedColumns           []string
-// )
-
-// func init() {
-// 	EtsReservedColumns = append(EtsReservedColumns, "event_timestamp")
-// 	EtsReservedColumns = append(EtsReservedColumns, "event_duration")
-// }
-
-// type Worker struct {
-// 	Queue     chan string
-// 	job_id    string
-// 	id        string
-// 	column_id string
-// 	workwg    *sync.WaitGroup
-// }
-
 func (self Worker) Run() {
+	self.Column.unique_values = make(map[string]int)
+	self.Column.precision = 1
+
+	self.startTime = time.Now()
 	go self.processQueue()
 }
 
 // Worker thread to classify column of csv file
 func (self Worker) processQueue() {
 
-	// record runtime for column classification
-	var startTime time.Time
-
-	// start time for classification
-	startTime = time.Now()
-
-	// column classification variables
-	isString := false
-	isInt := false
-	isFloat := false
 
 	// hold unique values
 	values := []string{}
-
-	// min and max values
-	var minValue int
-	var maxValue int
 
 	// item count
 	count := 0
@@ -69,15 +37,15 @@ func (self Worker) processQueue() {
 	unique_values := make(map[string]int)
 
 	// report starting job
-	if verbose && "" != self.column_id {
-		message := fmt.Sprintf(`{"column_id":"%v","status":"classifying column"}`, self.column_id)
+	if Verbose && "" != self.Column.column_id {
+		message := fmt.Sprintf(`{"column_id":"%v","status":"classifying column"}`, self.Column.column_id)
 		log.Println("[Worker-"+self.id+"] ["+self.job_id+"]", message)
 	}
 
 	// if reserved column
-	if StringInSlice(self.column_id, ReservedColumns) {
-		if verbose {
-			message := fmt.Sprintf(`{"column_id":"%v","status":"ets reserved column"}`, self.column_id)
+	if StringInSlice(self.Column.column_id, ReservedColumns) {
+		if Verbose {
+			message := fmt.Sprintf(`{"column_id":"%v","status":"ets reserved column"}`, self.Column.column_id)
 			log.Println("[Worker-"+self.id+"] ["+self.job_id+"]", message)
 		}
 		// drain chan contents
@@ -92,13 +60,13 @@ func (self Worker) processQueue() {
 	for item := range self.Queue {
 
 		// if column_id not defined
-		if "" == self.column_id {
+		if "" == self.Column.column_id {
 
 			// set column_id
-			self.column_id = item
+			self.Column.column_id = item
 
-			if verbose {
-				message := fmt.Sprintf(`{"column_id":"%v","status":"classifying column"}`, self.column_id)
+			if Verbose {
+				message := fmt.Sprintf(`{"column_id":"%v","status":"classifying column"}`, self.Column.column_id)
 				log.Println("[Worker-"+self.id+"] ["+self.job_id+"]", message)
 			}
 
@@ -122,25 +90,25 @@ func (self Worker) processQueue() {
 				}
 
 				// once column is classified as string stop checking
-				if !isString {
+				if !self.Column.isString {
 
 					if strIsFloat(item) {
 
 						// classify column as float
-						isFloat = true
-						isInt = false
-						isString = false
+						self.Column.isFloat = true
+						self.Column.isInt = false
+						self.Column.isString = false
 
 						// update min and max
 						n, _ := strconv.Atoi(item)
-						if 0 == minValue && 0 == maxValue {
-							minValue = n
-							maxValue = n
+						if 0 == self.Column.minValue && 0 == self.Column.maxValue {
+							self.Column.minValue = n
+							self.Column.maxValue = n
 						} else {
-							if minValue > n {
-								minValue = n
-							} else if maxValue < n {
-								maxValue = n
+							if self.Column.minValue > n {
+								self.Column.minValue = n
+							} else if self.Column.maxValue < n {
+								self.Column.maxValue = n
 							}
 						}
 
@@ -155,31 +123,31 @@ func (self Worker) processQueue() {
 					} else if strIsInt(item) {
 
 						// classify column as integer
-						if !isFloat {
-							isInt = true
-							isFloat = false
-							isString = false
+						if !self.Column.isFloat {
+							self.Column.isInt = true
+							self.Column.isFloat = false
+							self.Column.isString = false
 						}
 
 						// update min and max
 						n, _ := strconv.Atoi(item)
-						if 0 == minValue && 0 == maxValue {
-							minValue = n
-							maxValue = n
+						if 0 == self.Column.minValue && 0 == self.Column.maxValue {
+							self.Column.minValue = n
+							self.Column.maxValue = n
 						} else {
-							if minValue > n {
-								minValue = n
-							} else if maxValue < n {
-								maxValue = n
+							if self.Column.minValue > n {
+								self.Column.minValue = n
+							} else if self.Column.maxValue < n {
+								self.Column.maxValue = n
 							}
 						}
 
 					} else {
 
 						// classify column as string
-						isString = true
-						isInt = false
-						isFloat = false
+						self.Column.isString = true
+						self.Column.isInt = false
+						self.Column.isFloat = false
 
 					}
 				}
@@ -193,7 +161,7 @@ func (self Worker) processQueue() {
 	}
 
 	// create column schema object
-	column_schema := ColumnSchema{ColumnId: self.column_id}
+	column_schema := ColumnSchema{ColumnId: self.Column.column_id}
 
 	// get unique values for varchar columns and job metadata
 	for i := range unique_values {
@@ -201,10 +169,10 @@ func (self Worker) processQueue() {
 	}
 
 	// Determine data type of column
-	if isFloat {
+	if self.Column.isFloat {
 
 		// classify as geographic_point or fixed_point column
-		if "latitude" == self.column_id || "longitude" == self.column_id {
+		if "latitude" == self.Column.column_id || "longitude" == self.Column.column_id {
 
 			// classify as geographic_point column
 			column_schema.Type = "geographic_point"
@@ -214,20 +182,20 @@ func (self Worker) processQueue() {
 
 			// classify as fixed_point column
 			column_schema.Type = "fixed_point"
-			column_schema.Attributes.MinValue = minValue - NumericPadding
-			column_schema.Attributes.MaxValue = maxValue + NumericPadding
+			column_schema.Attributes.MinValue = self.Column.minValue - NumericPadding
+			column_schema.Attributes.MaxValue = self.Column.maxValue + NumericPadding
 			column_schema.Attributes.Precision = precision + PrecisionPadding
 
 		}
 
-	} else if isInt {
+	} else if self.Column.isInt {
 
 		// classify as integer column
 		column_schema.Type = "integer"
-		column_schema.Attributes.MinValue = minValue - NumericPadding
-		column_schema.Attributes.MaxValue = maxValue + NumericPadding
+		column_schema.Attributes.MinValue = self.Column.minValue - NumericPadding
+		column_schema.Attributes.MaxValue = self.Column.maxValue + NumericPadding
 
-	} else if isString {
+	} else if self.Column.isString {
 
 		// classify as varchar or selector column
 		if len(values) > count/3 || len(values) > SelectorUniqueValueThreshold {
@@ -255,8 +223,8 @@ func (self Worker) processQueue() {
 	}
 
 	// check if reserved column
-	if verbose {
-		classification := fmt.Sprintf(`{"column_id":"%v","size":%v,"type":"%v","status":"classified column"}`, self.column_id, len(values), column_schema.Type)
+	if Verbose {
+		classification := fmt.Sprintf(`{"column_id":"%v","size":%v,"type":"%v","status":"classified column"}`, self.Column.column_id, len(values), column_schema.Type)
 		log.Println("[Worker-"+self.id+"] ["+self.job_id+"]", classification)
 	}
 
@@ -277,8 +245,8 @@ func (self Worker) processQueue() {
 	}
 	guard.Unlock()
 
-	if verbose {
-		classification := fmt.Sprintf(`{"column_id":"%v","run_time":%v,"status":"complete"}`, self.column_id, time.Since(startTime).Seconds())
+	if Verbose {
+		classification := fmt.Sprintf(`{"column_id":"%v","run_time":%v,"status":"complete"}`, self.Column.column_id, time.Since(self.startTime).Seconds())
 		log.Println("[Worker-"+self.id+"] ["+self.job_id+"]", classification)
 	}
 

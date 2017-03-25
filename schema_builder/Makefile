@@ -12,10 +12,10 @@ GPATH = $(shell pwd)
 .PHONY: fmt test install build scrape clean
 
 install: fmt test
-	@GOPATH=${GPATH} go build -o ${PROJECT_NAME} main.go
+	@GOPATH=${GPATH} go build -o schema_builder *.go
 
 build: fmt test
-	@GOPATH=${GPATH} go build -o ${PROJECT_NAME} main.go
+	@GOPATH=${GPATH} go build -o schema_builder *.go
 
 fmt:
 	@GOPATH=${GPATH} gofmt -s -w *.go

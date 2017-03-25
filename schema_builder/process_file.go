@@ -34,7 +34,7 @@ func ProcessCsvFile(inCsvFile string) ([]byte, error) {
 		}
 	}
 
-	if verbose {
+	if Verbose {
 		log.Println(`[Job] [`+job_id+`]`, `{"file":"`+inCsvFile+`","status":"start"}`)
 	}
 
@@ -59,7 +59,7 @@ func ProcessCsvFile(inCsvFile string) ([]byte, error) {
 	// Create a new reader.
 	r := csv.NewReader(bufio.NewReader(f))
 
-	if verbose {
+	if Verbose {
 		log.Println(`[Job] [`+job_id+`]`, `{"file":"`+inCsvFile+`","status":"reading file"}`)
 	}
 
@@ -102,7 +102,7 @@ func ProcessCsvFile(inCsvFile string) ([]byte, error) {
 
 	num_lines += 1
 
-	if verbose {
+	if Verbose {
 		message := fmt.Sprintf(`{"file":"`+inCsvFile+`","status":"classifying columns","details":{"workers":%v}}`, num_columns)
 		log.Println(`[Job] [`+job_id+`]`, message)
 	}
@@ -135,14 +135,14 @@ func ProcessCsvFile(inCsvFile string) ([]byte, error) {
 		}
 	}
 
-	if verbose {
+	if Verbose {
 		log.Println(`[Job] [`+job_id+`]`, `{"file":"`+inCsvFile+`","status":"processing data"}`)
 	}
 
 	// wait for work groups to complete
 	workwg.Wait()
 
-	if verbose {
+	if Verbose {
 		log.Println(`[Job] [`+job_id+`]`, `{"file":"`+inCsvFile+`","status":"processing complete"}`)
 	}
 
@@ -161,7 +161,7 @@ func ProcessCsvFile(inCsvFile string) ([]byte, error) {
 	delete(Jobs, job_id)
 	guard.Unlock()
 
-	if verbose {
+	if Verbose {
 		message := fmt.Sprintf(`{"file":"`+inCsvFile+`","status":"complete","details":{"run_time":%v,"rows":%v,"cols":%v}}`, runTime, num_lines, num_columns)
 		log.Println(`[Job] [`+job_id+`]`, message)
 	}

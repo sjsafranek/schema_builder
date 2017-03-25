@@ -13,9 +13,14 @@ var (
 	NumericPadding               int = DEFAULT_NUMERIC_PADDING
 	PrecisionPadding             int = DEFAULT_PRECISION_PADDING
 	ReservedColumns              []string
+	Verbose  bool = false
 )
 
 func init() {
 	ReservedColumns = append(ReservedColumns, "event_timestamp")
 	ReservedColumns = append(ReservedColumns, "event_duration")
+}
+
+func init() {
+	Jobs = make(map[string]*Job)
 }
