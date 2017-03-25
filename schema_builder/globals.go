@@ -5,13 +5,13 @@ const (
 	DEFAULT_SELECTOR_UNIQUE_VALUE_THRESHOLD int = 200
 
 	// DEFAULt_VARCHAR_PADDING default value for VarcharPadding.
-	DEFAULt_VARCHAR_PADDING                 int = 1
+	DEFAULt_VARCHAR_PADDING int = 1
 
 	// DEFAULT_NUMERIC_PADDING default value for NumericPadding.
-	DEFAULT_NUMERIC_PADDING                 int = 1
-	
+	DEFAULT_NUMERIC_PADDING int = 1
+
 	// DEFAULT_PRECISION_PADDING default value for PrecisionPadding.
-	DEFAULT_PRECISION_PADDING               int = 0
+	DEFAULT_PRECISION_PADDING int = 0
 )
 
 var (
