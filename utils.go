@@ -81,10 +81,10 @@ func NewUUID() (string, error) {
 	return fmt.Sprintf("%x-%x-%x-%x-%x", b[0:4], b[4:6], b[6:8], b[8:10], b[10:]), nil
 }
 
-//  NewJobId generates and returns an job_id of desired length
+// newJobId generates and returns an job_id of desired length
 // @param int length of job_id
 // @returns string
-func NewJobId(n int) string {
+func newJobId(n int) string {
 	s := ""
 	for i := 1; i <= n; i++ {
 		s += string(_letters[rand.Intn(len(_letters))])

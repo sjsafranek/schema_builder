@@ -25,10 +25,10 @@ func ProcessCsvFile(inCsvFile string) ([]byte, error) {
 
 	t1 := time.Now()
 
-	job_id := NewJobId(8)
+	job_id := newJobId(8)
 	for {
 		if _, ok := Jobs[job_id]; ok {
-			job_id = NewJobId(8)
+			job_id = newJobId(8)
 		} else {
 			break
 		}
