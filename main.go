@@ -25,7 +25,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	results, err := processCsvFile(csv_file)
+	results, err := ProcessCsvFile(csv_file)
 	if nil != err {
 		log.Fatal(err)
 	}
