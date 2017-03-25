@@ -75,7 +75,7 @@ func (self Worker) processQueue() {
 	}
 
 	// if reserved column
-	if StringInSlice(self.column_id, EtsReservedColumns) {
+	if StringInSlice(self.column_id, ReservedColumns) {
 		if verbose {
 			message := fmt.Sprintf(`{"column_id":"%v","status":"ets reserved column"}`, self.column_id)
 			log.Println("[Worker-"+self.id+"] ["+self.job_id+"]", message)
