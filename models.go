@@ -1,5 +1,9 @@
 package main
 
+import (
+	"sync"
+)
+
 type ColumnSchema struct {
 	Type       string           `json:"type"`
 	ColumnId   string           `json:"column_id"`
@@ -28,4 +32,12 @@ type JobOptions struct {
 	VarcharPadding               int
 	NumericPadding               int
 	PrecisionPadding             int
+}
+
+type Worker struct {
+	Queue     chan string
+	job_id    string
+	id        string
+	column_id string
+	workwg    *sync.WaitGroup
 }

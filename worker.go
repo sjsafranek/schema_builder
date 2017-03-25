@@ -6,30 +6,30 @@ import (
 	"sort"
 	"strconv"
 	"strings"
-	"sync"
+	// "sync"
 	"time"
 )
 
-var (
-	SelectorUniqueValueThreshold int = 200
-	VarcharPadding               int = 1
-	NumericPadding               int = 1
-	PrecisionPadding             int = 0
-	EtsReservedColumns           []string
-)
+// var (
+// 	SelectorUniqueValueThreshold int = 200
+// 	VarcharPadding               int = 1
+// 	NumericPadding               int = 1
+// 	PrecisionPadding             int = 0
+// 	EtsReservedColumns           []string
+// )
 
-func init() {
-	EtsReservedColumns = append(EtsReservedColumns, "event_timestamp")
-	EtsReservedColumns = append(EtsReservedColumns, "event_duration")
-}
+// func init() {
+// 	EtsReservedColumns = append(EtsReservedColumns, "event_timestamp")
+// 	EtsReservedColumns = append(EtsReservedColumns, "event_duration")
+// }
 
-type Worker struct {
-	Queue     chan string
-	job_id    string
-	id        string
-	column_id string
-	workwg    *sync.WaitGroup
-}
+// type Worker struct {
+// 	Queue     chan string
+// 	job_id    string
+// 	id        string
+// 	column_id string
+// 	workwg    *sync.WaitGroup
+// }
 
 func (self Worker) Run() {
 	go self.processQueue()

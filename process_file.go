@@ -19,7 +19,7 @@ var (
 )
 
 // ProcessCsvFile reads in a csv and attempts to classify the data type
-// of each column. 
+// of each column.
 // Supported data types: integer, fixed_point, varchar and selctor.
 func ProcessCsvFile(inCsvFile string) ([]byte, error) {
 
