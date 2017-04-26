@@ -234,6 +234,8 @@ func (self Worker) processQueue() {
 		log.Println("[Worker-"+self.id+"] ["+self.job_id+"]", classification)
 	}
 
+	self.Column.Classification.RunTime = fmt.Sprintf("%v", time.Since(self.startTime).Seconds())
+
 	// add column schema to columns
 	guard.Lock()
 	// if "location" == column_schema.ColumnId {

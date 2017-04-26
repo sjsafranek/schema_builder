@@ -9,7 +9,7 @@ type Classification struct {
 	TotalValues  int    `json:"total"`
 	UniqueValues int    `json:"unique"`
 	StringReason string `json:"string_classification,omitempty"`
-	// RunTime
+	RunTime      string `json:"run_time"`
 }
 
 // ColumnSchema struct to store column information.
