@@ -5,11 +5,18 @@ import (
 	"time"
 )
 
+type Classification struct {
+	TotalValues  int    `json:"total"`
+	UniqueValues int    `json:"unique"`
+	StringReason string `json:"string_classification"`
+}
+
 // ColumnSchema struct to store column information.
 type ColumnSchema struct {
-	Type       string           `json:"type"`
-	ColumnId   string           `json:"column_id"`
-	Attributes AttributesSchema `json:"attributes"`
+	Type           string           `json:"type"`
+	ColumnId       string           `json:"column_id"`
+	Attributes     AttributesSchema `json:"attributes"`
+	Classification Classification   `json:"classification"`
 }
 
 // AttributesSchema struct to store column metadata for classification.

@@ -137,6 +137,8 @@ func (self Worker) processQueue() {
 
 					} else {
 
+						self.Column.Classification.StringReason = fmt.Sprintf("row%v\nitem %v", count, item)
+
 						// classify column as string
 						isString = true
 						isInt = false
@@ -158,6 +160,10 @@ func (self Worker) processQueue() {
 	for i := range unique_values {
 		values = append(values, i)
 	}
+
+	// metadata on classification
+	self.Column.Classification.UniqueValues = len(values)
+	self.Column.Classification.TotalValues = count
 
 	// Determine data type of column
 	if isFloat {
