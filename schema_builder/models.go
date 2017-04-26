@@ -8,7 +8,8 @@ import (
 type Classification struct {
 	TotalValues  int    `json:"total"`
 	UniqueValues int    `json:"unique"`
-	StringReason string `json:"string_classification"`
+	StringReason string `json:"string_classification,omitempty"`
+	// RunTime
 }
 
 // ColumnSchema struct to store column information.
