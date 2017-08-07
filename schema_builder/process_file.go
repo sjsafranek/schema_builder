@@ -1,4 +1,4 @@
-package schema_builder
+package main
 
 import (
 	"bufio"

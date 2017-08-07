@@ -29,4 +29,3 @@ scrape:
 
 clean:
 	@GOPATH=${GPATH} go clean
-

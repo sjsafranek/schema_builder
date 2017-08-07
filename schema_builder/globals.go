@@ -1,4 +1,4 @@
-package schema_builder
+package main
 
 const (
 	// DEFAULT_SELECTOR_UNIQUE_VALUE_THRESHOLD default value for SelectorUniqueValueThreshold.

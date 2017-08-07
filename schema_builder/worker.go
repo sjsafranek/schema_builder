@@ -1,4 +1,4 @@
-package schema_builder
+package main
 
 import (
 	"fmt"
@@ -74,12 +74,14 @@ func (self Worker) processQueue() {
 
 				// store unique values
 				// used to classify string column as varchar or selector
-				unique_values[item] = len(item)
+				// unique_values[item] = len(item)
+				unique_values[item]++
 
 				// check self.Column.Attributes.Length of string
 				// ** used for varchar columns
 				if unique_values[item] > self.Column.Attributes.Length {
-					self.Column.Attributes.Length = unique_values[item]
+					// self.Column.Attributes.Length = unique_values[item]
+					self.Column.Attributes.Length = len(item)
 				}
 
 				// once column is classified as string stop checking
@@ -93,7 +95,17 @@ func (self Worker) processQueue() {
 						isString = false
 
 						// update min and max
-						n, _ := strconv.Atoi(item)
+						// n, _ := strconv.Atoi(item)
+						// if nil != err {
+						// 	log.Println(err)
+						// }
+						f, err := strconv.ParseFloat(item, 64)
+						if nil != err {
+							log.Println(err)
+						}
+
+						n := int(f)
+
 						if 0 == self.Column.Attributes.MinValue && 0 == self.Column.Attributes.MaxValue {
 							self.Column.Attributes.MinValue = n
 							self.Column.Attributes.MaxValue = n
@@ -162,6 +174,10 @@ func (self Worker) processQueue() {
 	self.Column.Classification.UniqueValues = len(values)
 	self.Column.Classification.TotalValues = count
 
+	if len(values) < 50 {
+		self.Column.Classification.UniqueValueCounts = unique_values
+	}
+
 	// Determine data type of column
 	if isFloat {
 
@@ -175,6 +191,8 @@ func (self Worker) processQueue() {
 			self.Column.Attributes.MaxValue = 0
 			self.Column.Attributes.Precision = 0
 			self.Column.Attributes.Length = 0
+			self.Column.Attributes.Latitude = "latitude"
+			self.Column.Attributes.Longitude = "longitude"
 
 		} else {
 

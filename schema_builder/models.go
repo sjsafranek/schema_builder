@@ -1,4 +1,4 @@
-package schema_builder
+package main
 
 import (
 	"sync"
@@ -6,10 +6,11 @@ import (
 )
 
 type Classification struct {
-	TotalValues  int    `json:"total"`
-	UniqueValues int    `json:"unique"`
-	StringReason string `json:"string_classification,omitempty"`
-	RunTime      string `json:"run_time"`
+	TotalValues       int            `json:"total"`
+	UniqueValues      int            `json:"unique"`
+	StringReason      string         `json:"string_classification,omitempty"`
+	RunTime           string         `json:"run_time"`
+	UniqueValueCounts map[string]int `json:"unique_counts"`
 }
 
 // ColumnSchema struct to store column information.
@@ -26,6 +27,8 @@ type AttributesSchema struct {
 	MinValue  int      `json:"min_value,omitempty"`
 	MaxValue  int      `json:"max_value,omitempty"`
 	Precision int      `json:"precision,omitempty"`
+	Latitude  string   `json:"latitude,omitempty"`
+	Longitude string   `json:"longitude,omitempty"`
 	Values    []string `json:"values,omitempty"`
 }
 
